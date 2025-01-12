@@ -30,6 +30,8 @@ const SignUp = () => {
           "https://hospital-food-delivery-management-zewt.onrender.com/api/auth/register/",
           Values
         );
+
+        console.log("signup success");
         
         navigate("/LogIn");
       }

@@ -1,10 +1,12 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { FaGripLines } from "react-icons/fa";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { authActions } from "../../Store/auth";
 
 const Navbar = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
 
@@ -12,6 +14,10 @@ const Navbar = () => {
 
   const handleLogout = () => {
     localStorage.clear();
+    dispatch(authActions.logout());
+    dispatch(authActions.changeRole(""));
+    dispatch(authActions.changeName(""));
+    dispatch(authActions.changeEmail(""));
     navigate("/LogIn");
   };
 
@@ -24,6 +30,14 @@ const Navbar = () => {
         </Link>
         <div className="nav-links-bookheaven block md:flex gap-4 items-center">
           <div className="hidden md:flex gap-4">
+            {isLoggedIn === true && (
+              <Link
+                to="/profile"
+                className="px-2 py-1 border border-white rounded hover:bg-white hover:text-zinc-800 transition-all duration-300"
+              >
+                Profile
+              </Link>
+            )}
 
             {isLoggedIn === true && (
               <Link
@@ -70,8 +84,6 @@ const Navbar = () => {
       <div
         className={`${mobileNav} bg-zinc-800 h-screen absolute top-0 left-0 w-full z-40 flex flex-col items-center justify-center`}
       >
-        
-
         {isLoggedIn === false && (
           <>
             <Link

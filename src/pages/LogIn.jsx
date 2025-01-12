@@ -3,15 +3,17 @@ import axios from "axios";
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
+import { authActions } from "../Store/auth";
 
 const LogIn = () => {
+
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
   const [values, setValues] = useState({
     email: "",
     password: "",
   });
-
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -30,15 +32,19 @@ const LogIn = () => {
         values
       );
 
+      console.log(response.data);
+
       // Extract data from response
-      const { token, role, name, email } = response.data;
       dispatch(authActions.login());
-      localStorage.setItem("token", token);
-      localStorage.setItem("role", role);
-      localStorage.setItem("name", name);
+      dispatch(authActions.changeRole(response.data.role));
+      dispatch(authActions.changeName(response.data.name));
+      dispatch(authActions.changeEmail(response.data.email));
+      localStorage.setItem("token", response.data.token);
+
+      navigate("/profile");
 
     } catch (error) {
-      alert(error.response?.data?.message || "Login failed. Please try again.");
+      alert(error.response?.data?.message);
     }
   };
 
